@@ -1,0 +1,101 @@
+/* ============================
+   ESTILOS GENERALES
+=============================== */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background: #f4f8fb;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  color: #0078d7;
+  margin-top: 20px;
+}
+
+/* ============================
+   CONTENEDOR PRINCIPAL
+=============================== */
+
+.app-container {
+  max-width: 650px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================
+   FORMULARIO
+=============================== */
+
+form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+form input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #c7d7e4;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+form input:focus {
+  border-color: #0078d7;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 120, 215, 0.3);
+}
+
+form button {
+  padding: 10px 16px;
+  border: none;
+  background: #0078d7;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+form button:hover {
+  background: #005fa3;
+  transform: scale(1.04);
+}
+
+/* ============================
+   LISTADO
+=============================== */
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  background: #eef5fb;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border-left: 5px solid #0078d7;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Mensaje vacío */
+.empty {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}

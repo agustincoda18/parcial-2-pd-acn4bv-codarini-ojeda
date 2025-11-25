@@ -1,3 +1,8 @@
 {
-  "medicamentos": []
+  "medicamentos": [
+    {
+      "nombre": "asdsa",
+      "dosis": "2"
+    }
+  ]
 }
