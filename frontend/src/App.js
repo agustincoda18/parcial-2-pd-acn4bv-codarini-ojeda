@@ -1,41 +1,50 @@
-import React, { useEffect, useState } from "react";
-import MedicamentoForm from "./components/MedicamentoForm";
-import MedicamentoList from "./components/MedicamentoList";
-import "./App.css";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
+import { AuthProvider } from "./context/AuthContext";
+import useAuth from "./hooks/useAuth";
+
+import Layout from "./components/Layout";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Perfil from "./pages/Perfil";
+
+function PrivateRoute({ children }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+}
 
 function App() {
-  const [medicamentos, setMedicamentos] = useState([]);
-
-  // Obtener medicamentos desde el backend
-  const fetchMedicamentos = async () => {
-    const res = await fetch("http://localhost:3001/medicamentos");
-    const data = await res.json();
-    setMedicamentos(data);
-  };
-
-  useEffect(() => {
-    fetchMedicamentos();
-  }, []);
-
-  // Agregar medicamento (POST)
-  const agregarMedicamento = async (nuevo) => {
-    await fetch("http://localhost:3001/medicamentos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(nuevo)
-    });
-
-    fetchMedicamentos();
-  };
-
   return (
-    <div className="app-container">
-      <h1>💊 MedTrack - React</h1>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
 
-      <MedicamentoForm onAdd={agregarMedicamento} />
-      <MedicamentoList medicamentos={medicamentos} />
-    </div>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Layout><Dashboard /></Layout>
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/perfil"
+            element={
+              <PrivateRoute>
+                <Layout><Perfil /></Layout>
+              </PrivateRoute>
+            }
+          />
+
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
