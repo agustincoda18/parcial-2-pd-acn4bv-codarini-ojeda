@@ -6,6 +6,7 @@ export default function Dashboard() {
   const [nombre, setNombre] = useState("");
   const [dosis, setDosis] = useState("");
   const [categoria, setCategoria] = useState("");
+  const [botonesBloqueados, setBotonesBloqueados] = useState([]);
 
   const [editando, setEditando] = useState(null);
   const [editNombre, setEditNombre] = useState("");
@@ -15,6 +16,27 @@ export default function Dashboard() {
   // ======================
   // CARGAR MEDICAMENTOS
   // ======================
+
+// 🟩 AGREGADO — Estado para el resumen de tomas
+const [resumen, setResumen] = useState({
+  total: 0,
+  tomadas: 0,
+  pendientes: 0
+});
+
+// 🟩 AGREGADO — Traer resumen de tomas desde backend
+const fetchResumen = async () => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch("http://localhost:3001/tomas/resumen", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const data = await res.json();
+  setResumen(data);
+};
+
+
   const fetchMedicamentos = async () => {
     const token = localStorage.getItem("token");
     const res = await fetch("http://localhost:3001/medicamentos", {
@@ -24,9 +46,12 @@ export default function Dashboard() {
     setMedicamentos(data);
   };
 
-  useEffect(() => {
-    fetchMedicamentos();
-  }, []);
+
+    useEffect(() => {
+      fetchMedicamentos();
+      fetchResumen();   
+    }, []);
+
 
   // ======================
   // AGREGAR MEDICAMENTO
@@ -53,34 +78,36 @@ export default function Dashboard() {
   // ======================
   // CAMBIAR ESTADO
   // ======================
-  const cambiarEstado = async (id, nuevoEstado) => {
-    const token = localStorage.getItem("token");
+const registrarToma = async (id) => {
+  const token = localStorage.getItem("token");
 
-    await fetch(`http://localhost:3001/medicamentos/${id}/estado`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ estado: nuevoEstado }),
-    });
+  
+  setBotonesBloqueados(prev => [...prev, id]);
 
-    fetchMedicamentos();
-  };
+  await fetch(`http://localhost:3001/tomas/${id}`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  fetchMedicamentos();
+  fetchResumen();
+};
 
   // ======================
   // ELIMINAR MEDICAMENTO
   // ======================
-  const eliminarMedicamento = async (id) => {
-    const token = localStorage.getItem("token");
+const eliminarMedicamento = async (id) => {
+  const token = localStorage.getItem("token");
 
-    await fetch(`http://localhost:3001/medicamentos/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  await fetch(`http://localhost:3001/medicamentos/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-    fetchMedicamentos();
-  };
+  fetchMedicamentos();
+  fetchResumen(); 
+};
+
 
   // ======================
   // EDITAR
@@ -114,7 +141,9 @@ export default function Dashboard() {
 
   return (
     <div className="dash">
-      <h1>💊 Panel de Medicamentos</h1>
+      <h1>💊 Panel de Medicamentoss</h1>
+
+
 
       {/* FORM */}
       <div className="form-row">
@@ -159,13 +188,22 @@ export default function Dashboard() {
               </td>
 
               <td>
-                <button className="btn-tomado" onClick={() => cambiarEstado(m.id, "Tomado")}>
-                  ✓ Tomado
-                </button>
-                <button className="btn-pendiente" onClick={() => cambiarEstado(m.id, "Pendiente")}>
-                  ⏳ Pendiente
-                </button>
+               <button
+                    className="btn-tomado"
+                    disabled={botonesBloqueados.includes(m.id)}
+                    onClick={() => registrarToma(m.id)}
+                  >
+                    ✓ Tomado
+                  </button>
+                  <button
+                    className="btn-pendiente"
+                    onClick={() => cambiarEstado(m.id, "pendiente")}
+                  >
+                    ⏳ Pendiente
+                  </button>
 
+
+              
                 <button className="btn-edit" onClick={() => abrirEditor(m)}>✏️</button>
                 <button className="btn-delete" onClick={() => eliminarMedicamento(m.id)}>🗑️</button>
               </td>
@@ -194,6 +232,20 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+    
+    
+    
+           
+    <div className="resumen-tomas">
+      <h2>📊 Resumen de Tomas</h2>
+      <p><strong>Total:</strong> {resumen.total}</p>
+      <p><strong>Tomadas:</strong> {resumen.tomadas}</p>
+      <p><strong>Pendientes:</strong> {resumen.pendientes}</p>
+    </div>
+    
+    
+    
+    
     </div>
   );
 }
