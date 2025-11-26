@@ -77,6 +77,10 @@
   justify-content: center;
   align-items: center;
 }
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .modal {
   background: white;
@@ -132,4 +136,31 @@
   background: #ffc107;
   color: black;
   margin-right: 6px;
+}
+.resumen-tomas {
+  background: #eef5ff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border-left: 5px solid #3b82f6;
+}
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  z-index: 9999;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-10px); }
 }
