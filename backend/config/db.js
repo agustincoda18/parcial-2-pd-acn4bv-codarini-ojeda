@@ -15,6 +15,17 @@ db.serialize(() => {
       password TEXT NOT NULL
     )
   `);
+  db.run(`
+          CREATE TABLE IF NOT EXISTS tomas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        medicamento_id INTEGER NOT NULL,
+        usuario_id INTEGER NOT NULL,
+        fecha_hora TEXT NOT NULL,
+        estado TEXT NOT NULL,
+        FOREIGN KEY (medicamento_id) REFERENCES medicamentos(id) ON DELETE CASCADE,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+      )
+  `);
 
   db.run(`
   CREATE TABLE IF NOT EXISTS medicamentos (
