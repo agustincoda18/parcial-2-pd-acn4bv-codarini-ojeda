@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Perfil from "./pages/Perfil";
+import MedicamentoDetalle from "./pages/MedicamentoDetalle";
 
 function PrivateRoute({ children }) {
   const { isAuthenticated } = useAuth();
@@ -38,6 +39,15 @@ function App() {
             element={
               <PrivateRoute>
                 <Layout><Perfil /></Layout>
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/medicamentos/:id"
+            element={
+              <PrivateRoute>
+                <Layout><MedicamentoDetalle /></Layout>
               </PrivateRoute>
             }
           />

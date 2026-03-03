@@ -5,7 +5,6 @@ const db = new sqlite3.Database("./database.sqlite", (err) => {
   else console.log("Base de datos conectada");
 });
 
-// Crear tablas si no existen
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS usuarios (
@@ -28,16 +27,21 @@ db.serialize(() => {
   `);
 
   db.run(`
-  CREATE TABLE IF NOT EXISTS medicamentos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre TEXT,
-    dosis TEXT,
-    categoria TEXT,
-    estado TEXT DEFAULT 'pendiente',
-    user_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES usuarios(id)
-  )
-`);
+    CREATE TABLE IF NOT EXISTS medicamentos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT,
+      dosis TEXT,
+      categoria TEXT,
+      estado TEXT DEFAULT 'pendiente',
+      user_id INTEGER,
+      FOREIGN KEY (user_id) REFERENCES usuarios(id)
+    )
+  `);
+
+  // ✅ Si la tabla medicamentos ya existía sin "estado", intentamos agregarla
+  db.run(`ALTER TABLE medicamentos ADD COLUMN estado TEXT DEFAULT 'pendiente'`, (err) => {
+    // Si ya existe la columna, SQLite tira error. Lo ignoramos.
+  });
 });
 
 module.exports = db;

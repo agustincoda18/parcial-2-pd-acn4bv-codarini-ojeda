@@ -1,0 +1,12 @@
+.card{
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:12px;
+  padding:16px;
+  max-width:520px;
+}
+.back-link{
+  display:inline-block;
+  margin-top:12px;
+  text-decoration:none;
+}
